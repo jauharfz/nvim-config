@@ -697,6 +697,12 @@ do
     -- But for many setups, the LSP (`ts_ls`) will work just fine
     ts_ls = {},
     jsonls = {},
+    sqlls = {},
+    html = {},
+    cssls = {},
+    marksman = {},
+    dockerls = {},
+    docker_compose_language_service = {},
 
     stylua = {}, -- Used to format Lua code
 
@@ -792,14 +798,15 @@ do
     },
     -- You can also specify external formatters in here.
     formatters_by_ft = {
-      go = { 'goimports' },
+      go = { 'goimports', 'gofumpt' },
       -- rust = { 'rustfmt' },
       -- Conform can also run multiple formatters sequentially
-      python = { "isort", "black" },
+      python = { 'isort', 'black' },
       json = { 'prettier' },
       --
       -- You can use 'stop_after_first' to run the first available formatter from the list
-      javascript = { "prettierd", "prettier", stop_after_first = true },
+      javascript = { 'prettierd', 'prettier', stop_after_first = true },
+      sql = { 'sql-formatter' },
     },
   }
 
