@@ -904,7 +904,8 @@ do
   --  Used to highlight, edit, and navigate code
   --
   --  See `:help nvim-treesitter-intro`
-
+  local parser_install_dir = vim.fn.stdpath("data") .. "/site"
+  vim.opt.runtimepath:prepend(parser_install_dir)
   -- NOTE: You can also specify a branch or a specific commit
   vim.pack.add { { src = gh 'nvim-treesitter/nvim-treesitter', version = 'main' } }
 
