@@ -377,15 +377,16 @@ do
     },
   }
 
-  -- [[ Colorscheme ]]
+  -- [[ colorscheme ]]
   -- You can easily change to a different colorscheme.
   -- Change the name of the colorscheme plugin below, and then
   -- change the command under that to load whatever the name of that colorscheme is.
   --
   -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-  vim.pack.add { gh 'folke/tokyonight.nvim' }
+  vim.pack.add { gh 'maxmx03/solarized.nvim' }
+  vim.o.background = 'light'
   ---@diagnostic disable-next-line: missing-fields
-  require('tokyonight').setup {
+  require('solarized').setup {
     styles = {
       comments = { italic = false }, -- Disable italics in comments
     },
@@ -394,7 +395,7 @@ do
   -- Load the colorscheme here.
   -- Like many other themes, this one has different styles, and you could load
   -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-  vim.cmd.colorscheme 'tokyonight-day'
+  vim.cmd.colorscheme 'solarized'
 
   -- Highlight todo, notes, etc in comments
   vim.pack.add { gh 'folke/todo-comments.nvim' }
@@ -686,7 +687,22 @@ do
   --  See `:help lsp-config` for information about keys and how to configure
   ---@type table<string, vim.lsp.Config>
   local servers = {
-    -- clangd = {},
+    clangd = {
+      cmd = {
+        'clangd',
+        '--background-index',
+        '--clang-tidy',
+        '--header-insertion=iwyu',
+        '--completion-style=detailed',
+        '--function-arg-placeholders',
+        '--fallback-style=llvm',
+      },
+      init_options = {
+        usePlaceholders = true,
+        completeUnimported = true,
+        clangdFileStatus = true,
+      },
+    },
     gopls = {},
     -- pyright = {},
     -- rust_analyzer = {},
@@ -695,16 +711,16 @@ do
     --    https://github.com/pmizio/typescript-tools.nvim
     --
     -- But for many setups, the LSP (`ts_ls`) will work just fine
-    ts_ls = {},
+    vtsls = {},
     jsonls = {},
     sqlls = {},
     html = {},
     cssls = {},
     marksman = {},
     dockerls = {},
-    docker_compose_language_service = {},
-
+    eslint = {},
     stylua = {}, -- Used to format Lua code
+    docker_compose_language_service = {},
 
     -- Special Lua Config, as recommended by neovim help docs
     lua_ls = {
@@ -761,6 +777,19 @@ do
   local ensure_installed = vim.tbl_keys(servers or {})
   vim.list_extend(ensure_installed, {
     -- You can add other tools here that you want Mason to install
+    --    -- Formatter
+    'stylua', -- Formatter Lua
+    'prettier', -- Formatter JS/TS, HTML, CSS, JSON
+    'gofumpt', -- Formatter Golang
+    'goimports', -- Formatter & Import Organizer Golang
+    'sql-formatter', -- Formatter SQL
+
+    -- Linter & Helpers
+    'golangci-lint', -- Linter Golang
+    'gomodifytags', -- Helper Go struct tag
+
+    -- Debugger
+    'delve', -- Debugger Golang (dlv)
   })
 
   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -798,6 +827,9 @@ do
     },
     -- You can also specify external formatters in here.
     formatters_by_ft = {
+      c = { 'clang-format' },
+      cpp = { 'clang-format' },
+      lua = { 'stylua' },
       go = { 'goimports', 'gofumpt' },
       -- rust = { 'rustfmt' },
       -- Conform can also run multiple formatters sequentially
@@ -806,7 +838,10 @@ do
       --
       -- You can use 'stop_after_first' to run the first available formatter from the list
       javascript = { 'prettierd', 'prettier', stop_after_first = true },
+      typescript = { 'prettierd', 'prettier', stop_after_first = true },
       sql = { 'sql-formatter' },
+      html = { 'prettier' },
+      css = { 'prettier' },
     },
   }
 

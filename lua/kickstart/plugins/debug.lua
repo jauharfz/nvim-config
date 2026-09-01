@@ -42,6 +42,7 @@ require('mason-nvim-dap').setup {
   ensure_installed = {
     -- Update this to ensure that you have the debuggers for the langs you want
     'delve',
+    'codellb',
   },
 }
 
@@ -93,3 +94,20 @@ require('dap-go').setup {
     detached = vim.fn.has 'win32' == 0,
   },
 }
+
+dap.configurations.c = {
+  {
+    name = 'Launch C/C++ Executable',
+    type = 'codelldb',
+    request = 'launch',
+    program = function()
+      -- Specify the path to the compiled binary file
+      return vim.fn.input('Path ke file binary: ', vim.fn.getcwd() .. '/', 'file')
+    end,
+    cwd = '${workspaceFolder}',
+    stopOnEntry = false,
+    args = {},
+  },
+}
+
+dap.configurations.cpp = dap.configurations.c
