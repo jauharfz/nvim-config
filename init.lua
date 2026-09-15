@@ -815,6 +815,11 @@ do
         go = true,
         lua = true,
         python = true,
+        typescript = true,
+        javascript = true,
+        typescriptreact = true,
+        javascriptreact = true,
+        json = true,
       }
       if enabled_filetypes[vim.bo[bufnr].filetype] then
         return { timeout_ms = 500 }
