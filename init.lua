@@ -374,6 +374,7 @@ do
       { '<leader>t', group = '[T]oggle' },
       { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } }, -- Enable gitsigns recommended keymaps first
       { 'gr', group = 'LSP Actions', mode = { 'n' } },
+      { '<leader>R', group = '[R]equest (Kulala)', mode = { 'n', 'v' } }, -- Kulala
     },
   }
 
@@ -865,6 +866,19 @@ do
   vim.pack.add { { src = gh 'L3MON4D3/LuaSnip', version = vim.version.range '2.*' } }
   require('luasnip').setup {}
 
+  -- NOTE: VIM-DADBOD-SETUP
+  vim.pack.add {
+    gh 'tpope/vim-dadbod',
+    gh 'kristijanhusak/vim-dadbod-ui',
+    gh 'kristijanhusak/vim-dadbod-completion',
+  }
+
+  -- use nerd font?
+  vim.g.db_ui_use_nerd_fonts = vim.g.have_nerd_font and 1 or 0
+
+  -- keymap for show DB-UI
+  vim.keymap.set('n', '<leader>db', '<cmd>DBUIToggle<CR>', { desc = '[D]ata[B]ase UI Toggle' })
+
   -- `friendly-snippets` contains a variety of premade snippets.
   --    See the README about individual language/framework/plugin snippets:
   --    https://github.com/rafamadriz/friendly-snippets
@@ -917,6 +931,17 @@ do
 
     sources = {
       default = { 'lsp', 'path', 'snippets' },
+
+      -- dadbod completion for open sql file
+      per_filetype = {
+        sql = { 'dadbod', 'snippets', 'buffer' },
+        mysql = { 'dadbod', 'snippets', 'buffer' },
+        plsql = { 'dadbod', 'snippets', 'buffer' },
+      },
+      -- register native blink module from dadbod-completion
+      providers = {
+        dadbod = { name = 'Dadbod', module = 'vim_dadbod_completion.blink' },
+      },
     },
 
     snippets = { preset = 'luasnip' },
@@ -1022,6 +1047,17 @@ do
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   -- require 'custom.plugins'
+  --
+  -- [[ Kulala REST/HTTP/GraphQL/gRPC Client ]]
+  vim.pack.add { gh 'dont-be-evil-company/kulala.nvim' }
+
+  require('kulala').setup {
+    -- active the kulala keymap
+    global_keymaps = true,
+    global_keymaps_prefix = '<leader>R',
+    kulala_keymaps_prefix = '',
+    vscode_rest_client_environmentvars = true,
+  }
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
